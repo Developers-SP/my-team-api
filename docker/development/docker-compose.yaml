@@ -37,4 +37,4 @@ services:
       - MYSQL_USER=root
       - MYSQL_PASSWORD=12345
       - MYSQL_ROOT_PASSWORD=12345
-      - MYSQL_DATABASE= myteamcsgo
+      - MYSQL_DATABASE=myteamcsgo
