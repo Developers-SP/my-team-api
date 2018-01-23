@@ -24,37 +24,37 @@ ADD ./docker/development/files/virtualhost.conf /etc/httpd/conf.d/virtualhost.co
 RUN yum -y install wget
 RUN rpm -ivh  https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN rpm -ivh http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-RUN rpm -ivh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 
 # -----------------------------------------------------------------------------
 # Install PHP 7.0.12 from remi's repository
 # -----------------------------------------------------------------------------
 RUN yum --enablerepo=remi --enablerepo=remi-test -y install \
-  php71w \
-  php71w-php \
-  php71w-php-common \
-  php71w-php-cli \
-  php71w-php-devel \
-  php71w-php-gd \
-  php71w-php-mbstring \
-  php71w-php-mcrypt \
-  php71w-php-pecl-memcached \
-  php71w-php-mysqlnd \
-  php71w-php-pdo \
-  php71w-php-pgsql \
-  php71w-php-pecl-zip \
-  php71w-php-xml; \
+  php70 \
+  php70-php \
+  php70-php-common \
+  php70-php-cli \
+  php70-php-devel \
+  php70-php-gd \
+  php70-php-mbstring \
+  php70-php-mcrypt \
+  php70-php-pecl-memcached \
+  php70-php-mysqlnd \
+  php70-php-pdo \
+  php70-php-pgsql \
+  php70-php-pecl-zip \
+  php70-php-intl \
+  php70-php-xml; \
   yum clean all
 # RUN -y install php71w-php-pecl-xdebug.x86_64 
 # -----------------------------------------------------------------------------
 # Copy php.ini configs
 # -----------------------------------------------------------------------------
-COPY ./docker/development/files/php.ini /etc/opt/remi/php71w/php.ini
+COPY ./docker/development/files/php.ini /etc/opt/remi/php70/php.ini
 
 # -----------------------------------------------------------------------------
 # Creating symbolic link between php-7 to php for compatibility
 # -----------------------------------------------------------------------------
-RUN ln -s /usr/bin/php71w  /usr/bin/php
+RUN ln -s /usr/bin/php70  /usr/bin/php
 
 # -----------------------------------------------------------------------------
 # Install NewRelic
@@ -116,5 +116,3 @@ RUN chmod -v +x /usr/bin/init.sh
 CMD ["/usr/bin/init.sh"]
 #ENTRYPOINT ["/usr/bin/init.sh"]
 #ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
-
-
