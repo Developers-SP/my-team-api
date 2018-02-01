@@ -17,6 +17,7 @@
         "cakephp/bake": "^1.1",
         "cakephp/cakephp-codesniffer": "^3.0",
         "cakephp/debug_kit": "^3.2",
+        "phpunit/phpunit": "^5.7|^6.0",
         "psy/psysh": "@stable"
     },
     "suggest": {
