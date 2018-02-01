@@ -12,8 +12,9 @@ class CreatePlayer extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('player', ['id' => false, 'primary_key' => ['steam_id']]);
-        $table->addColumn('steam_id', 'string', [
+        $table = $this->table('player', ['id' => false, 'primary_key' => ['id']]);
+        
+        $table->addColumn('id', 'string', [
             'default' => null,
             'limit' => 50,
             'null' => false,
@@ -38,10 +39,9 @@ class CreatePlayer extends AbstractMigration
             'limit' => 255,
             'null' => true,
         ]);
-        $table->addColumn('active', 'string', [
-            'default' => null,
-            'limit' => 255,
+        $table->addColumn('active', 'integer', [
             'null' => false,
+            'limit' => 1,
             'default' => 1
         ]);
         $table->addColumn('avatar', 'string', [

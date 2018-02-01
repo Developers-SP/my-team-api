@@ -27,7 +27,7 @@ class PlayerTable extends Table
     {
         parent::initialize($config);
 ;
-        $this->primaryKey('steam_id');
+        $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
     }
@@ -41,7 +41,7 @@ class PlayerTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->allowEmpty('steam_id', 'create');
+            ->allowEmpty('id', 'create');
 
         $validator
             ->requirePresence('steam_name', 'create', 'This is required parameter.')
@@ -59,8 +59,8 @@ class PlayerTable extends Table
     public function validationLoginApi(Validator $validator)
     {
         $validator
-            ->requirePresence('steam_id', 'create', 'This is required parameter.')
-            ->notEmpty('steam_id', 'steam_id is required');
+            ->requirePresence('id', 'create', 'This is required parameter.')
+            ->notEmpty('id', 'id is required');
 
         return $validator;
     }
@@ -83,9 +83,9 @@ class PlayerTable extends Table
         return true;
     }
 
-    public function __get($steam_id)
+    public function __get($player_id)
     {   
-        $player = $this->find()->where(['steam_id' => $steam_id])->toArray();
+        $player = $this->find()->where(['id' => $player_id])->toArray();
 
         if(!empty($player[0])) 
             return $player[0];
