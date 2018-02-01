@@ -17,6 +17,7 @@ class PlayerController extends ApiController
         parent::initialize();
         $this->loadComponent('Steam');
         $this->loadComponent('API');
+
     }
     
     /**
@@ -27,20 +28,18 @@ class PlayerController extends ApiController
     public function login()
 	{
 	    $this->request->allowMethod('post');
-
-	    // Getting steam_id parameter
-	    $steam_id = $this->request->getData()['steam_id'];
 	    
-	    // Validating if steam_id is being sended
-	    if(empty($steam_id)) {
+	    // Validating if player_id is being sended
+	    if(empty($this->request->getData()['id'])) {
 			$this->httpStatusCode = 400;
-			$this->apiResponse['message'] = "steam_id is required";
+			$this->apiResponse['message'] = "id is required";
 
 			return null;
 	    }
+	    $player_id = $this->request->getData()['id'];
 	    
 	    // Getting player data if exists
-	    $player = $this->Player->__get($steam_id);
+	    $player = $this->Player->__get($player_id);
 
 	    // Validating if player exists
 	    if(!empty($player)) {
@@ -51,12 +50,12 @@ class PlayerController extends ApiController
 	    }
 
 	    // Getting player data in Steam
-		$player_info = $this->Steam->getUserInfo($steam_id);
+		$player_info = $this->Steam->getUserInfo($player_id);
 
-		// Validating if steam_id exists
+		// Validating if player_id exists
 		if(empty($player_info)) {
-			$this->httpStatusCode = 400;
-			$this->apiResponse['message'] = "Invalid steam_id";
+			$this->httpStatusCode = 404;
+			$this->apiResponse['message'] = "Player not found";
 
 			return null;
 		}
@@ -66,7 +65,7 @@ class PlayerController extends ApiController
 
 		// Saving Player
 		if ($this->Player->save($player)) {
-			$player = $this->Player->__get($steam_id);
+			$player = $this->Player->__get($player_id);
 
 			$this->apiResponse['player'] = $player;
 			$this->apiResponse['new'] 	 = 1;
@@ -84,20 +83,27 @@ class PlayerController extends ApiController
      *
      * @return Response|null
      */
-	public function edit($steam_id = null)
+	public function edit($player_id = null)
 	{
 		$this->request->allowMethod('put');
 
-		// Validating if steam_id is being sended
-	    if(empty($steam_id)) {
+		// Validating if player_id is being sended
+	    if(empty($player_id)) {
 			$this->httpStatusCode = 400;
-			$this->apiResponse['message'] = "steam_id is required";
+			$this->apiResponse['message'] = "id is required";
 
 			return null;
 	    }
 
 	    // Getting player on database
-	    $player = $this->Player->get($steam_id);
+	    try {
+	    	$player = $this->Player->get($player_id);	
+	    } catch (\Exception $e) {
+	    	$this->httpStatusCode = 404;
+			$this->apiResponse['message'] = "Player not found";
+
+			return null;
+	    }
 
 	    // Merge Request Data with Player Table
 		$player = $this->Player->patchEntity($player, $this->request->
@@ -118,31 +124,31 @@ class PlayerController extends ApiController
      *
      * @return Response|null
      */
-	public function updateBySteam($steam_id)
+	public function updateBySteam($player_id = null)
 	{
-		$this->request->allowMethod('post');
+		$this->request->allowMethod('put');
 
-		// Validating if steam_id is being sended
-	    if(empty($steam_id)) {
+		// Validating if player_id is being sended
+	    if(empty($player_id)) {
 			$this->httpStatusCode = 400;
-			$this->apiResponse['message'] = "steam_id is required";
+			$this->apiResponse['message'] = "id is required";
 
 			return null;
 	    }
 
 	    // Getting player data in Steam
-		$player_info = $this->Steam->getUserInfo($steam_id);
+		$player_info = $this->Steam->getUserInfo($player_id);
 		
-		// Validating if steam_id exists
+		// Validating if player_id exists
 		if(empty($player_info)) {
-			$this->httpStatusCode = 400;
-			$this->apiResponse['message'] = "Invalid steam_id";
+			$this->httpStatusCode = 404;
+			$this->apiResponse['message'] = "Player not found";
 
 			return null;
 		}
 
 	    // Getting player on database
-	    $player = $this->Player->get($steam_id);
+	    $player = $this->Player->get($player_id);
 
 	    // Merge Request Data with Player Table
 		$player = $this->Player->patchEntity($player, $player_info);
@@ -154,5 +160,30 @@ class PlayerController extends ApiController
 			$this->apiResponse['message'] = "Unexpected Error";
 		}
 
+	}
+
+	public function stats($player_id = null)
+	{
+		$this->request->allowMethod('get');
+
+		// Validating if player_id is being sended
+	    if(empty($player_id)) {
+			$this->httpStatusCode = 400;
+			$this->apiResponse['message'] = "id is required";
+
+			return null;
+	    }
+
+	    // Getting stats from Steam
+	    $stats = $this->Steam->getUserStats($player_id);
+
+	    if(empty($stats)) {
+			$this->httpStatusCode = 404;
+			$this->apiResponse['message'] = "Stats are not available for this id";
+
+			return null;
+	    }
+
+	    $this->apiResponse['stats'] = $stats;
 	}
 }

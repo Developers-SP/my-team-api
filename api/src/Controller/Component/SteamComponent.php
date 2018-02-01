@@ -14,16 +14,19 @@ class SteamComponent extends Component
     {
         $this->http = new Client();
         $this->key = Configure::read('Steam.key');
-
+        $this->baseUrl = "http://api.steampowered.com/";
+        $this->appId = 730;
     }
     
-    // método responsável pela criação da senha.
-    public function getUserInfo($steam_id)
+    public function getUserInfo($player_id = null)
     {
-        if(!empty($steam_id)) {
-            $url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$this->key}&steamids={$steam_id}";
+        if(!empty($player_id)) {
+            $url = "{$this->baseUrl}ISteamUser/GetPlayerSummaries/v0002";
 
-            $response = $this->http->get($url);
+            $response = $this->http->get($url, [
+                'key' => $this->key,
+                'steamids' => $player_id
+            ]);
             
             if(!empty($response->json['response']['players'][0]))
                 return $this->__normalize($response->json['response']['players'][0]);
@@ -33,10 +36,32 @@ class SteamComponent extends Component
         return [];
     }
 
+    public function getUserStats($player_id = null)
+    {
+        if(!empty($player_id)) {
+            $url = "{$this->baseUrl}ISteamUserStats/GetUserStatsForGame/v0002";
+
+            $response = $this->http->get($url, [
+                'key' => $this->key,
+                'steamid' => $player_id,
+                'appid' => $this->appId
+            ]);
+
+            if(empty($response->json['playerstats']['stats']))
+                return [];
+
+            $stats = $response->json['playerstats']['stats'];
+
+            return $stats;
+        }
+
+        return [];
+    }
+
     private function __normalize($player) {
-        
+
         return [
-            'steam_id'      => $player['steamid'],
+            'id'            => $player['steamid'],
             'steam_name'    => $player['personaname'],
             'avatar'        => $player['avatarfull'],
         ];
