@@ -1,0 +1,58 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "cakephp-swagger",
+        "description": "Quickstart annotation example",
+        "termsOfService": "http://swagger.io/terms/",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/player/login": {
+            "post": {
+                "tags": [
+                    "Player"
+                ],
+                "summary": "Retrieve the player",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "SteamID",
+                        "required": true,
+                        "type": "string",
+                        "default": ""
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "string"
+                                },
+                                "result": {
+                                    "type": "json"
+                                },
+                                "new": {
+                                    "description": "Show if is a new Player",
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Player Not Found"
+                    },
+                    "400": {
+                        "description": "Empty ID"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}
