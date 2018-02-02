@@ -5,10 +5,8 @@ namespace App\Controller;
 use RestApi\Controller\ApiController;
 use RestApi\Utility\JwtToken;
  
-/**
- * Foo Controller
- *
- */
+/*                
+			      */
 class PlayerController extends ApiController
 {
  	
@@ -20,11 +18,6 @@ class PlayerController extends ApiController
 
     }
     
-    /**
-     * bar method
-     *
-     * @return Response|null
-     */
     public function login()
 	{
 	    $this->request->allowMethod('post');
