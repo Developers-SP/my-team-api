@@ -397,6 +397,6 @@ return [
         'defaults' => 'php',
     ],
     'Steam' => [
-        'key' => '6EC552334A8D97A6C1E500DA68C5F422'
+        'key' => 'E0B0C3D87C31DB3CA1D0C47D9B76DC51'
     ]
 ];
