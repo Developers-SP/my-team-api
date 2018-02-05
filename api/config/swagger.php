@@ -5,8 +5,8 @@ return [
     'Swagger' => [
         'ui' => [
             'title' => 'MyTeamCSGO API Docs',
-            'validator' => true,
-            'api_selector' => true,
+            'validator' => false,
+            'api_selector' => false,
             'route' => '/documentation',
             'schemes' => ['http', 'https']
         ],
