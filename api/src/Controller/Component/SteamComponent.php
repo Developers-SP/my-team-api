@@ -29,7 +29,7 @@ class SteamComponent extends Component
             ]);
             
             if(!empty($response->json['response']['players'][0]))
-                return $this->__normalize($response->json['response']['players'][0]);
+                return $response->json['response']['players'][0];
             
         }
 
@@ -58,12 +58,4 @@ class SteamComponent extends Component
         return [];
     }
 
-    private function __normalize($player) {
-
-        return [
-            'id'            => $player['steamid'],
-            'steam_name'    => $player['personaname'],
-            'avatar'        => $player['avatarfull'],
-        ];
-    }
 }
