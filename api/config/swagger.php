@@ -7,12 +7,12 @@ return [
             'title' => 'MyTeamCSGO API Docs',
             'validator' => true,
             'api_selector' => true,
-            'route' => '/docs',
+            'route' => '/documentation',
             'schemes' => ['http', 'https']
         ],
         'docs' => [
             'crawl' => Configure::read('debug'),
-            'route' => 'docs/',
+            'route' => 'documentation/',
             'cors' => [
                 'Access-Control-Allow-Origin' => '*',
                 'Access-Control-Allow-Methods' => 'GET, POST',
@@ -24,9 +24,8 @@ return [
                 'include' => [
                     ROOT . DS . 'src' . DS . 'Docs'
                 ]
-                
+
             ]
         ]
     ]
 ];
-

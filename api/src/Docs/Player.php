@@ -13,7 +13,7 @@
         default=""
     ),
     @SWG\Response(
-        response="200",
+        response=200,
         description="Successful operation",
         @SWG\Schema(
             @SWG\Property(
@@ -121,7 +121,7 @@
         default=""
     ),
     @SWG\Response(
-        response="200",
+        response=200,
         description="Successful operation",
         @SWG\Schema(
             @SWG\Property(
@@ -157,7 +157,7 @@
         default=""
     ),
     @SWG\Response(
-        response="200",
+        response=200,
         description="Successful operation",
         @SWG\Schema(
             @SWG\Property(
@@ -193,7 +193,7 @@
         default=""
     ),
     @SWG\Response(
-        response="200",
+        response=200,
         description="Successful operation",
         @SWG\Schema(
             @SWG\Property(
