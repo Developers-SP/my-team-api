@@ -8,13 +8,15 @@ use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\ORM\TableRegistry;
+
 
 /**
  * Users Model
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class PlayerTable extends Table
+class TeamTable extends Table
 {
 
     /**
@@ -31,7 +33,7 @@ class PlayerTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsToMany('team',['joinTable' => 'team_player']);
+        $this->belongsToMany('player',['joinTable' => 'team_player']);
     }
 
     /**
@@ -46,28 +48,13 @@ class PlayerTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('steam_name', 'create', 'This is required parameter.')
-            ->notEmpty('steam_name', 'steam_name is required.');
+            ->requirePresence('name', 'create', 'This is required parameter.')
+            ->notEmpty('name', 'name is required.');
 
         return $validator;
     }
 
-    /**
-     * Default validation rules.
-     *
-     * @param Validator $validator Validator instance.
-     * @return Validator
-     */
-    public function validationLoginApi(Validator $validator)
-    {
-        $validator
-            ->requirePresence('id', 'create', 'This is required parameter.')
-            ->notEmpty('id', 'id is required');
-
-        return $validator;
-    }
-
-    /**
+   /**
      * Modifies password before saving into database
      *
      * @param Event $event Event
@@ -85,9 +72,9 @@ class PlayerTable extends Table
         return true;
     }
 
-    public function __get($player_id)
+    public function __get($team_id)
     {   
-        $player = $this->find()->where(['id' => $player_id])->toArray();
+        $player = $this->find()->where(['id' => $team_id])->contain(['player'])->toArray();
 
         if(!empty($player[0])) 
             return $player[0];

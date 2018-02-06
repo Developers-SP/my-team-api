@@ -1,7 +1,7 @@
 <?php
 use Migrations\AbstractMigration;
 
-class CreateTeams extends AbstractMigration
+class CreateTeam extends AbstractMigration
 {
     /**
      * Change Method.
@@ -12,7 +12,7 @@ class CreateTeams extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('teams', ['id' => false, 'primary_key' => ['id']]);
+        $table = $this->table('team', ['id' => false, 'primary_key' => ['id']]);
         $table->addColumn('id', 'integer', [
             'autoIncrement' => true,
             'default' => null,

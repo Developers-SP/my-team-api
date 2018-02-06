@@ -8,13 +8,15 @@ use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\ORM\TableRegistry;
+use Cake\Error\ErrorHandler;
 
 /**
  * Users Model
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class PlayerTable extends Table
+class TeamPlayerTable extends Table
 {
 
     /**
@@ -25,13 +27,16 @@ class PlayerTable extends Table
      */
     public function initialize(array $config)
     {
+
+        $this->belongsTo('team')->setJoinType('INNER');
+
+        $this->belongsTo('player')->setJoinType('INNER');
+
         parent::initialize($config);
-;
-        $this->primaryKey('id');
+
+        $this->primaryKey(['team_id', 'player_id']);
 
         $this->addBehavior('Timestamp');
-
-        $this->belongsToMany('team',['joinTable' => 'team_player']);
     }
 
     /**
@@ -43,31 +48,19 @@ class PlayerTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->allowEmpty('id', 'create');
+            ->allowEmpty('player_id', 'create')
+            ->allowEmpty('team_id', 'create');
 
         $validator
-            ->requirePresence('steam_name', 'create', 'This is required parameter.')
-            ->notEmpty('steam_name', 'steam_name is required.');
+            ->requirePresence('player_id', 'create', 'This is required parameter.')
+            ->notEmpty('player_id', 'player_id is required.')
+            ->requirePresence('team_id', 'create', 'This is required parameter.')
+            ->notEmpty('team_id', 'team_id is required.');
 
         return $validator;
     }
 
-    /**
-     * Default validation rules.
-     *
-     * @param Validator $validator Validator instance.
-     * @return Validator
-     */
-    public function validationLoginApi(Validator $validator)
-    {
-        $validator
-            ->requirePresence('id', 'create', 'This is required parameter.')
-            ->notEmpty('id', 'id is required');
-
-        return $validator;
-    }
-
-    /**
+   /**
      * Modifies password before saving into database
      *
      * @param Event $event Event
@@ -85,12 +78,12 @@ class PlayerTable extends Table
         return true;
     }
 
-    public function __get($player_id)
+    public function getplayers($player_id, $team_id)
     {   
-        $player = $this->find()->where(['id' => $player_id])->toArray();
+        $teamplayer = $this->find()->where(['player_id' => $player_id])->where(['team_id' => $team_id])->contain(['team','player'])->toArray();
 
-        if(!empty($player[0])) 
-            return $player[0];
+        if(!empty($teamplayer[0])) 
+            return $teamplayer[0];
 
         return [];
         

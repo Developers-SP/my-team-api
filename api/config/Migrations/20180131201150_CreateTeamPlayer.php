@@ -15,7 +15,7 @@ class CreateTeamPlayer extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('team_player');
+        $table = $this->table('team_player', ['id' => false, 'primary_key' => ['team_id','player_id']]);
         $table->addColumn('team_id', 'integer', [
             'default' => null,
             'limit' => 11,
@@ -34,10 +34,12 @@ class CreateTeamPlayer extends AbstractMigration
             'default' => null,
             'null' => false,
         ]);
-        $table->addPrimaryKey([
-            'team_id',
-            'player_id',
-        ]);
+        $table->addForeignKey('team_id', 'team', ['id'],
+                            ['constraint'=>'team_id_idx']);       
+
+        $table->addForeignKey('player_id', 'player', ['id'],
+                            ['constraint'=>'player_id_idx']); 
+
         $table->create();
     }
 }

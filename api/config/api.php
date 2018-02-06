@@ -2,7 +2,7 @@
  
 return [
     'ApiRequest' => [
-        'log' => false,
+        'log' => true,
         'logOnlyErrors' => true,
         'jwtAuth' => [
             'enabled' => false,
