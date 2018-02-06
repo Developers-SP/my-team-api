@@ -216,3 +216,5 @@ if (Configure::read('debug')) {
 }
 
 Plugin::load('RestApi', ['bootstrap' => true]);
+
+Plugin::load('Alt3/Swagger', ['routes' => true]);

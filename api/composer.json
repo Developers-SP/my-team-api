@@ -6,9 +6,11 @@
     "license": "MIT",
     "require": {
         "php": ">=5.6",
+        "alt3/cakephp-swagger": "dev-master",
         "cakephp/cakephp": "3.5.*",
         "cakephp/migrations": "^1.0",
         "cakephp/plugin-installer": "^1.0",
+        "doctrine/annotations": "1.4",
         "josegonzalez/dotenv": "2.*",
         "mobiledetect/mobiledetectlib": "2.*",
         "multidots/cakephp-rest-api": "^1.1"

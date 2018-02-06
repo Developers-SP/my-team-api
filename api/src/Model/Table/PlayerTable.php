@@ -78,7 +78,7 @@ class PlayerTable extends Table
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         if(empty($entity->created))
-            $entity->modified   = date("Y-m-d H:i:s");
+            $entity->created   = date("Y-m-d H:i:s");
             
         $entity->modified   = date("Y-m-d H:i:s");
 
