@@ -6,7 +6,7 @@ use Cake\Controller\ComponentRegistry;
 use Cake\Network\Http\Client;
 use Cake\Core\Configure;
 
-class TeamsComponent extends Component
+class TeamComponent extends Component
 {
     protected $_defaultConfig = [];
 

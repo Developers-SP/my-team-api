@@ -2,12 +2,10 @@
 
 namespace App\Controller;
 
-use Cake\Core\Configure;
-use Cake\Error\Debugger;
 use RestApi\Controller\ApiController;
 use RestApi\Utility\JwtToken;
-use App\Model\Entity\Team;
-use App\Model\Entity\TeamPlayer;
+use App\Model\Entity\Teams;
+use App\Model\Entity\TeamPlayers;
 /**
  * Team Controller
  *
@@ -22,10 +20,13 @@ class TeamController extends ApiController
         parent::initialize();
         $this->loadComponent('Steam');
         $this->loadComponent('API');
-        $this->loadComponent('Teams');
-        $this->loadModel('Team');
-        $this->loadModel('TeamPlayer');
-        $this->loadModel('Player');
+        $this->loadComponent('Team');
+        $this->loadModel('Teams');
+        $this->loadModel('TeamPlayers');
+        $this->loadModel('Players');
+        $this->loadComponent('Validation', [
+            'api_resource' => $this
+        ]);
     }
     /**
      * Index method
@@ -33,59 +34,40 @@ class TeamController extends ApiController
      * @return Response|null
      */
     public function insert()
-    {
-        Configure::read('debug',true);
-
+    {        
         $this->request->allowMethod('post');
 
-        if(empty($this->request->getData()['name'])){
-            $this->httpStatusCode = 400;
-            $this->apiResponse['message'] = "name is required";
-
+         // Validating if name team is being sended
+        if($this->Validation->is_emptyID($this->request->getData()['name'], [ 'status_code' => 400, 'message' => "name is required" ]))
             return null;
-        }
 
-        if(empty($this->request->getData()['player_id'])){
-            $this->httpStatusCode = 400;
-            $this->apiResponse['message'] = "id_player is required";
-
+         // Validating if player_id is being sended
+        if($this->Validation->is_emptyID($this->request->getData()['player_id'], [ 'status_code' => 400, 'message' => "player_id is required" ]))
             return null;
-        }
         
-        $team_info = $this->Teams->normalize($this->request->getData());
-
-       
+        $team_info = $this->Team->normalize($this->request->getData());
      
-        $team = $this->Team->patchEntity($this->Team->newEntity(), $team_info);
+        $team = $this->Teams->patchEntity($this->Teams->newEntity(), $team_info);
 
-        // Saving team 
-        if (!$this->Team->save($team)) {
-            $this->httpStatusCode = 500;
-            $this->apiResponse['message'] = "Unexpected Error";
-            return null;
-        }
+        if($this->Validation->was_saved($this->Teams->save($team))) {
+            $player = $this->Players->__get($this->request->getData()['player_id']); 
 
-        $player = $this->Player->__get($this->request->getData()['player_id']); 
+            $teamPlayer = $this->TeamPlayers->patchEntity($this->TeamPlayers->newEntity(), [
+                   'team_id'=> $team->id, 
+                   'player_id' => $player->id,
+                   'is_owner' => True
+            ]);
 
-        $teamPlayer = $this->TeamPlayer->patchEntity($this->TeamPlayer->newEntity(), [
-               'team_id'=> $team->id, 
-               'player_id' => $player->id
-        ]);
-
-        //Saving teamPlayer
-        if (!$this->TeamPlayer->save($teamPlayer)) {
-
-                $this->httpStatusCode = 500;
-                $this->apiResponse['message'] = "Unexpected Error";
+                 //Saving teamPlayer 
+            if($this->Validation->was_saved($this->TeamPlayers->save($teamPlayer))) {
+                $this->apiResponse['message'] =  "Team Saved";
                 return null;
+            }
+             
+
         }
         
-        $teamPlayer = $this->Team->__get($team->id);
-        $this->apiResponse['team'] =  $teamPlayer;
-        return null;
+       
         
-        
-        
-
-    }
+     }
 }

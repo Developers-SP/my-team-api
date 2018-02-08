@@ -19,7 +19,7 @@ class PlayerController extends ApiController
         $this->loadComponent('Validation', [
         	'api_resource' => $this
         ]);
-
+         $this->loadModel('Players');
     }
 
     public function login()
@@ -34,7 +34,7 @@ class PlayerController extends ApiController
 	    $player_id = $this->request->getData()['id'];
 	    
 	    // Getting player data if exists
-	    $player = $this->Player->__get($player_id);
+	    $player = $this->Players->__get($player_id);
 
 	    // Validating if player exists
 	    if(!empty($player)) {
@@ -55,13 +55,13 @@ class PlayerController extends ApiController
 
 
 		// Merge steam data with Player table
-		$player = $this->Player->patchEntity($this->Player->newEntity(), $player_info);
+		$player = $this->Players->patchEntity($this->Players->newEntity(), $player_info);
 
 		// Saving Player
 
-		if($this->Validation->was_saved($this->Player->save($player))) {
+		if($this->Validation->was_saved($this->Players->save($player))) {
 
-			$player = $this->Player->__get($player_id);
+			$player = $this->Players->__get($player_id);
 
 			$this->apiResponse['player'] = $player;
 			$this->apiResponse['new'] 	 = 1;
@@ -86,7 +86,7 @@ class PlayerController extends ApiController
 		
 	    // Getting player on database
 	    try {
-	    	$player = $this->Player->get($player_id);	
+	    	$player = $this->Players->get($player_id);	
 	    } catch (\Exception $e) {
 	    	$this->httpStatusCode = 404;
 			$this->apiResponse['message'] = "Player not found";
@@ -95,10 +95,10 @@ class PlayerController extends ApiController
 	    }
 
 	    // Merge Request Data with Player Table
-		$player = $this->Player->patchEntity($player, $this->request->
+		$player = $this->Players->patchEntity($player, $this->request->
 			getData());
 
-		$this->Validation->was_saved($this->Player->save($player));
+		$this->Validation->was_saved($this->Players->save($player));
 	}
 
 	/**
@@ -124,12 +124,12 @@ class PlayerController extends ApiController
 		$player_info = $this->Normalize->player($player_info);
 
 	    // Getting player on database
-	    $player = $this->Player->get($player_id);
+	    $player = $this->Players->get($player_id);
 
 	    // Merge Request Data with Player Table
-		$player = $this->Player->patchEntity($player, $player_info);
+		$player = $this->Players->patchEntity($player, $player_info);
 
-		$this->Validation->was_saved($this->Player->save($player));
+		$this->Validation->was_saved($this->Players->save($player));
 	}
 
 	public function stats($player_id = null)

@@ -1,7 +1,7 @@
 <?php
 use Migrations\AbstractMigration;
 
-class CreatePlayer extends AbstractMigration
+class CreatePlayers extends AbstractMigration
 {
     /**
      * Change Method.
@@ -12,7 +12,7 @@ class CreatePlayer extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('player', ['id' => false, 'primary_key' => ['id']]);
+        $table = $this->table('players', ['id' => false, 'primary_key' => ['id']]);
         
         $table->addColumn('id', 'string', [
             'default' => null,

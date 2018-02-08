@@ -9,14 +9,14 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\ORM\TableRegistry;
-use Cake\Error\ErrorHandler;
+
 
 /**
  * Users Model
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class TeamPlayerTable extends Table
+class TeamsTable extends Table
 {
 
     /**
@@ -27,16 +27,13 @@ class TeamPlayerTable extends Table
      */
     public function initialize(array $config)
     {
-
-        $this->belongsTo('team')->setJoinType('INNER');
-
-        $this->belongsTo('player')->setJoinType('INNER');
-
         parent::initialize($config);
-
-        $this->primaryKey(['team_id', 'player_id']);
+;
+        $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsToMany('players',['joinTable' => 'team_players']);
     }
 
     /**
@@ -48,14 +45,11 @@ class TeamPlayerTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->allowEmpty('player_id', 'create')
-            ->allowEmpty('team_id', 'create');
+            ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('player_id', 'create', 'This is required parameter.')
-            ->notEmpty('player_id', 'player_id is required.')
-            ->requirePresence('team_id', 'create', 'This is required parameter.')
-            ->notEmpty('team_id', 'team_id is required.');
+            ->requirePresence('name', 'create', 'This is required parameter.')
+            ->notEmpty('name', 'name is required.');
 
         return $validator;
     }
@@ -78,12 +72,12 @@ class TeamPlayerTable extends Table
         return true;
     }
 
-    public function getplayers($player_id, $team_id)
+    public function __get($team_id)
     {   
-        $teamplayer = $this->find()->where(['player_id' => $player_id])->where(['team_id' => $team_id])->contain(['team','player'])->toArray();
+        $player = $this->find()->where(['id' => $team_id])->contain(['players'])->toArray();
 
-        if(!empty($teamplayer[0])) 
-            return $teamplayer[0];
+        if(!empty($player[0])) 
+            return $player[0];
 
         return [];
         

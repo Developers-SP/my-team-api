@@ -24,9 +24,19 @@ class TeamControllerTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function testIndex()
+    public function testInsertOK()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'id' => '76561198121209165',
+            'name' => 'Vk'
+        ];
+
+        $this->post('/team/insert', $data);
+
+        $this->assertResponseCode(200);
+        $this->assertContentType("application/json");
+        $this->assertResponseContains("id");
+        $this->assertResponseContains("OK");
     }
 
     /**
