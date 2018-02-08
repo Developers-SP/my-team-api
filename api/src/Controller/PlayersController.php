@@ -7,7 +7,7 @@ use RestApi\Utility\JwtToken;
  
 /*                
 			      */
-class PlayerController extends ApiController
+class PlayersController extends ApiController
 {
  	
  	public function initialize()
@@ -19,7 +19,6 @@ class PlayerController extends ApiController
         $this->loadComponent('Validation', [
         	'api_resource' => $this
         ]);
-         $this->loadModel('Players');
     }
 
     public function login()

@@ -12,7 +12,7 @@ use App\Model\Entity\TeamPlayers;
  *
  * @method \App\Model\Entity\Team[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class TeamController extends ApiController
+class TeamsController extends ApiController
 {
 
     public function initialize()
@@ -21,7 +21,6 @@ class TeamController extends ApiController
         $this->loadComponent('Steam');
         $this->loadComponent('API');
         $this->loadComponent('Team');
-        $this->loadModel('Teams');
         $this->loadModel('TeamPlayers');
         $this->loadModel('Players');
         $this->loadComponent('Validation', [

@@ -7,7 +7,7 @@ use Cake\TestSuite\IntegrationTestCase;
 /**
  * App\Controller\TeamController Test Case
  */
-class TeamControllerTest extends IntegrationTestCase
+class TeamsControllerTest extends IntegrationTestCase
 {
 
     /**
@@ -16,7 +16,7 @@ class TeamControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.team'
+        'app.teams'
     ];
 
     /**
@@ -31,7 +31,7 @@ class TeamControllerTest extends IntegrationTestCase
             'name' => 'Vk'
         ];
 
-        $this->post('/team/insert', $data);
+        $this->post('/teams/insert', $data);
 
         $this->assertResponseCode(200);
         $this->assertContentType("application/json");
