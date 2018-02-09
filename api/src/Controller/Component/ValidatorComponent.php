@@ -60,6 +60,13 @@ class ValidatorComponent extends Component
 
     	return true;
     }
+
+    public function is_empty($field = null) {
+        if(empty($field))
+            return true;
+
+        return false;
+    }
     
     private function setReturn($function, $response = null) {
     	$response = $this->getResponseParameters($function, $response);

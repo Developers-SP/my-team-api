@@ -14,15 +14,27 @@ class PlayersController extends ApiController
     {
         parent::initialize();
         $this->loadComponent('Steam');
-        $this->loadComponent('API');
+        $this->loadComponent('API',[
+        	'api_resource' => $this
+        ]);
         $this->loadComponent('Normalize');
-        $this->loadComponent('Validator', [
+        $this->loadComponent('Validator',[
         	'api_resource' => $this
         ]);
     }
 
     public function index() {
+
+    	$this->request->allowMethod('get');
+
+    	$query = $this->Players->find('all')->contain(['teams']);
+
+    	$order = $this->API->order_by();
+    	if(!empty($order))
+    		$query = $query->order($order);
     	
+    	$this->httpStatusCode = 200;
+    	$this->apiResponse['players'] = $query->toArray();
     }
 
     public function login()
