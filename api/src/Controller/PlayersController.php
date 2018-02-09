@@ -16,21 +16,24 @@ class PlayersController extends ApiController
         $this->loadComponent('Steam');
         $this->loadComponent('API');
         $this->loadComponent('Normalize');
-        $this->loadComponent('Validation', [
+        $this->loadComponent('Validator', [
         	'api_resource' => $this
         ]);
+    }
+
+    public function index() {
+    	
     }
 
     public function login()
 	{
 	    $this->request->allowMethod('post');
 	    
+	    $player_id = $this->Validator->__getRequestKey('id');
 	    // Validating if player_id is being sended
-	    if($this->Validation->is_emptyID($this->request->getData()['id']))
+	    if($this->Validator->is_emptyID($player_id))
 	    	return null;
 	    
-
-	    $player_id = $this->request->getData()['id'];
 	    
 	    // Getting player data if exists
 	    $player = $this->Players->__get($player_id);
@@ -46,7 +49,7 @@ class PlayersController extends ApiController
 	    $player_info = $this->Steam->getUserInfo($player_id);
 
 		// Validating if player_id exists
-		if(!$this->Validation->is_steamValid($player_info))
+		if(!$this->Validator->is_steamValid($player_info))
 			return null;
 
 	    // Getting player data in Steam
@@ -58,7 +61,7 @@ class PlayersController extends ApiController
 
 		// Saving Player
 
-		if($this->Validation->was_saved($this->Players->save($player))) {
+		if($this->Validator->was_saved($this->Players->save($player))) {
 
 			$player = $this->Players->__get($player_id);
 
@@ -80,7 +83,7 @@ class PlayersController extends ApiController
 		$this->request->allowMethod('put');
 
 		// Validating if player_id is being sended
-	    if($this->Validation->is_emptyID($player_id))
+	    if($this->Validator->is_emptyID($player_id))
 	    	return null;
 		
 	    // Getting player on database
@@ -97,7 +100,7 @@ class PlayersController extends ApiController
 		$player = $this->Players->patchEntity($player, $this->request->
 			getData());
 
-		$this->Validation->was_saved($this->Players->save($player));
+		$this->Validator->was_saved($this->Players->save($player));
 	}
 
 	/**
@@ -110,13 +113,13 @@ class PlayersController extends ApiController
 		$this->request->allowMethod('put');
 
 		// Validating if player_id is being sended
-	    if($this->Validation->is_emptyID($player_id))
+	    if($this->Validator->is_emptyID($player_id))
 	    	return null;
 
 	    $player_info = $this->Steam->getUserInfo($player_id);
 
 		// Validating if player_id exists
-		if(!$this->Validation->is_steamValid($player_info))
+		if(!$this->Validator->is_steamValid($player_info))
 			return null;
 
 	    // Getting player data in Steam
@@ -128,7 +131,7 @@ class PlayersController extends ApiController
 	    // Merge Request Data with Player Table
 		$player = $this->Players->patchEntity($player, $player_info);
 
-		$this->Validation->was_saved($this->Players->save($player));
+		$this->Validator->was_saved($this->Players->save($player));
 	}
 
 	public function stats($player_id = null)
@@ -136,14 +139,14 @@ class PlayersController extends ApiController
 		$this->request->allowMethod('get');
 
 		// Validating if player_id is being sended
-	    if($this->Validation->is_emptyID($player_id))
+	    if($this->Validator->is_emptyID($player_id))
 	    	return null;
 
 	    // Getting stats from Steam
 	    $stats = $this->Steam->getUserStats($player_id);
 
 	    // Validating if player_id exists
-		if(!$this->Validation->is_steamValid($stats, ['message' => "Stats are not available for this id"]))
+		if(!$this->Validator->is_steamValid($stats, ['message' => "Stats are not available for this id"]))
 			return null;
 
 	    $this->apiResponse['stats'] = $stats;

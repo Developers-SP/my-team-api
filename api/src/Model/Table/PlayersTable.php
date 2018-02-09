@@ -87,7 +87,7 @@ class PlayersTable extends Table
 
     public function __get($player_id)
     {   
-        $player = $this->find()->where(['id' => $player_id])->toArray();
+        $player = $this->find()->where(['id' => $player_id])->contain(['teams'])->toArray();
 
         if(!empty($player[0])) 
             return $player[0];
