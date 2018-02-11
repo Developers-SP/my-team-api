@@ -28,7 +28,7 @@ class TeamsController extends ApiController
         ]);
     }
     /**
-     * Index method
+     * Insert method
      *
      * @return Response|null
      */
@@ -59,14 +59,23 @@ class TeamsController extends ApiController
 
                  //Saving teamPlayer 
             if($this->Validation->was_saved($this->TeamPlayers->save($teamPlayer))) {
-                $this->apiResponse['message'] =  "Team Saved";
+                $this->apiResponse['teams'] =  $this->Teams->__get($team->id);
                 return null;
             }
              
-
         }
-        
-       
-        
-     }
+              
+    }
+
+        /**
+     * Delete method
+     *
+     * @return Response|null
+     */
+    public function delete(){
+        $this->request->allowMethod('delete');
+
+        $this->httpStatusCode = 400;
+
+    }
 }

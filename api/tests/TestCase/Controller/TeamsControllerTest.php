@@ -3,6 +3,8 @@ namespace App\Test\TestCase\Controller;
 
 use App\Controller\TeamController;
 use Cake\TestSuite\IntegrationTestCase;
+use App\Model\Entity\TeamPlayers;
+use Cake\ORM\TableRegistry;
 
 /**
  * App\Controller\TeamController Test Case
@@ -10,24 +12,34 @@ use Cake\TestSuite\IntegrationTestCase;
 class TeamsControllerTest extends IntegrationTestCase
 {
 
+
+
     /**
      * Fixtures
      *
      * @var array
      */
-    public $fixtures = [
-        'app.teams'
-    ];
+    public $fixtures = ['app.teams','app.players'];
+   
+    public function createplayer(){
+          $data = [
+           'id' => '76561198121209165'
+        ];
+
+        $this->post('/players/login', $data);
+    }
 
     /**
-     * Test index method
+     * Test insert method
      *
      * @return void
      */
     public function testInsertOK()
     {
+        $this->createplayer();
+
         $data = [
-            'id' => '76561198121209165',
+            'player_id' => '76561198121209165',
             'name' => 'Vk'
         ];
 
@@ -35,8 +47,47 @@ class TeamsControllerTest extends IntegrationTestCase
 
         $this->assertResponseCode(200);
         $this->assertContentType("application/json");
-        $this->assertResponseContains("id");
-        $this->assertResponseContains("OK");
+        $this->assertResponseContains("teams");
+    }
+
+    /**
+     * Test insert method
+     *
+     * @return void
+     */
+    public function testInsertEmptyName()
+    {
+        $player_id = $this->createplayer();
+
+        $data = [
+            'player_id' => '76561198121209165'
+        ];
+
+        $this->post('/teams/insert', $data);
+
+        $this->assertResponseCode(400);
+        $this->assertContentType("application/json");
+        $this->assertResponseContains("name is required");
+    }
+
+     /**
+     * Test insert method
+     *
+     * @return void
+     */
+    public function testInsertEmptyPlayer_id()
+    {
+       // $this->createplayer();
+
+        $data = [
+            'name' => 'Vk'
+        ];
+
+        $this->post('/teams/insert', $data);
+
+        $this->assertResponseCode(400);
+        $this->assertContentType("application/json");
+        $this->assertResponseContains("player_id is required");
     }
 
     /**
@@ -44,9 +95,22 @@ class TeamsControllerTest extends IntegrationTestCase
      *
      * @return void
      */
-    public function testView()
+    public function testDeleteNotPermission()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $this->createplayer();
+        $TeamPlayers = TableRegistry::get('TeamPlayers');
+        $team_id =$TeamPlayers->find()->select(["team_id"])->where(['player_id' => '76561198121209165'])->toArray();
+      
+        $data = [
+            'player_id' => '76561198121209165',
+            'team_id' => $team_id[0]['team_id']
+        ];
+        
+        $this->delete('/teams/delete', $data);
+
+        $this->assertResponseCode(200);
+        
+
     }
 
     /**

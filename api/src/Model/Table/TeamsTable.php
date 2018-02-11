@@ -74,10 +74,10 @@ class TeamsTable extends Table
 
     public function __get($team_id)
     {   
-        $player = $this->find()->where(['id' => $team_id])->contain(['players'])->toArray();
+        $team = $this->find()->where(['id' => $team_id])->contain(['players'])->toArray();
 
-        if(!empty($player[0])) 
-            return $player[0];
+        if(!empty($team[0])) 
+            return $team[0];
 
         return [];
         
