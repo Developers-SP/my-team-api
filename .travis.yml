@@ -1,7 +1,0 @@
-language: php
-php:
-  - "7.1"
-script:
-  - cd api
-  - composer update
-  - vendor/bin/phpunit
