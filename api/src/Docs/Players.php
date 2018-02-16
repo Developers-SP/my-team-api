@@ -1,8 +1,8 @@
 <?php 
 /** @SWG\Post(
-    path="/player/login",
+    path="/players/login",
     summary="Retrieve the player",
-    tags={"Player"},
+    tags={"Players"},
     produces={"application/json"},
     @SWG\Parameter(
         name="id",
@@ -84,9 +84,9 @@
    
 /** 
  @SWG\Put(
-    path="/player/edit/{id}",
+    path="/players/edit/{id}",
     summary="Edit the player",
-    tags={"Player"},
+    tags={"Players"},
     produces={"application/json"},
     @SWG\Parameter(
         name="id",
@@ -144,9 +144,9 @@
    
 /** 
  @SWG\Put(
-    path="/player/updateBySteam/{id}",
+    path="/players/updateBySteam/{id}",
     summary="Update Player basic data by steam API",
-    tags={"Player"},
+    tags={"Players"},
     produces={"application/json"},
     @SWG\Parameter(
         name="id",
@@ -180,9 +180,9 @@
    
 /** 
  @SWG\Get(
-    path="/player/stats/{id}",
+    path="/players/stats/{id}",
     summary="Get Player stats in Steam",
-    tags={"Player"},
+    tags={"Players"},
     produces={"application/json"},
     @SWG\Parameter(
         name="id",

@@ -6,7 +6,7 @@ use Cake\Controller\ComponentRegistry;
 use Cake\Network\Http\Client;
 use Cake\Core\Configure;
 
-class ValidationComponent extends Component
+class ValidatorComponent extends Component
 {
     protected $_defaultConfig = [];
     private $api_resource;
@@ -22,7 +22,16 @@ class ValidationComponent extends Component
     	$this->api_resource = $this->config('api_resource');
     }
 
-	public function is_emptyID($steam_id, $response = null) {
+    public function __getRequestKey($key = null) {
+        
+        if(!empty($this->api_resource->request->getData()[$key]))
+            return $this->api_resource->request->getData()[$key];
+        
+
+        return null;
+    }
+
+	public function is_emptyID($steam_id = null, $response = null) {
 		if(empty($steam_id)) {
 			$this->setReturn(__FUNCTION__, $response);
 
@@ -32,7 +41,7 @@ class ValidationComponent extends Component
 		return false;
     }
 
-    public function is_steamValid($steam_player, $response = null) {
+    public function is_steamValid($steam_player = null, $response = null) {
     	if(empty($steam_player)) {
     		$this->setReturn(__FUNCTION__, $response);
 
@@ -50,6 +59,13 @@ class ValidationComponent extends Component
     	}
 
     	return true;
+    }
+
+    public function is_empty($field = null) {
+        if(empty($field))
+            return true;
+
+        return false;
     }
     
     private function setReturn($function, $response = null) {
