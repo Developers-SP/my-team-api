@@ -89,5 +89,27 @@ class TeamPlayersTable extends Table
         
     }
 
+    public function getIsOwner($player_id, $team_id)
+    {   
+        $teamplayer = $this->find()->select(['is_owner'])->where(['player_id' => $player_id])->where(['team_id' => $team_id])->toArray();
+
+        if(!empty($teamplayer[0])) 
+            return  boolval($teamplayer[0]['is_owner']);
+
+        return false;
+        
+    }
+
+    public function deleteTeamPlayers($player_id, $team_id)
+    {   
+        
+
+        if($this->find()->delete()->where(['player_id' => $player_id])->where(['team_id' => $team_id])->execute()) 
+            return  'Deleted Successfully';
+
+        return 'Error deleting';
+        
+    }
+
 }
 

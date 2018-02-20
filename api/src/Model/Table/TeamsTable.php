@@ -33,7 +33,7 @@ class TeamsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsToMany('players',['joinTable' => 'team_players']);
+        $this->belongsToMany('players',['joinTable' => 'team_players', 'dependent' => true, 'cascadeCallbacks' => true, ]);
     }
 
     /**
@@ -80,6 +80,15 @@ class TeamsTable extends Table
             return $team[0];
 
         return [];
+        
+    }                
+
+    public function deleteTeams($team_id)
+    {   
+        if($this->find()->delete()->where(['id' => $team_id])->execute()) 
+            return  1;
+
+        return 0;
         
     }
 

@@ -21,9 +21,9 @@ class TeamsControllerTest extends IntegrationTestCase
      */
     public $fixtures = ['app.teams','app.players'];
    
-    public function createplayer(){
+    public function createplayer($id = null){
           $data = [
-           'id' => '76561198121209165'
+           'id' => ($id == null)?'76561198121209165':$id
         ];
 
         $this->post('/players/login', $data);
@@ -91,55 +91,111 @@ class TeamsControllerTest extends IntegrationTestCase
     }
 
     /**
-     * Test view method
+     * Test Delete method
+     *
+     * @return void
+     */
+    public function testDeleteSuccessfully()
+    {
+        $this->createplayer();
+        $TeamPlayers = TableRegistry::get('TeamPlayers');
+
+         $data = [
+            'player_id' => '76561198121209165',
+            'name' => 'Vk'
+        ];
+
+        $this->post('/teams/insert', $data);
+        
+        $team_id =$TeamPlayers->find()->select(["team_id"])->where(['player_id' => '76561198121209165'])->toArray();
+
+        $this->delete('/teams/delete/'.$team_id[0]['team_id'].'?player_id=76561198121209165', $data);
+
+        $this->assertResponseCode(200);
+        $this->assertResponseContains("Deleted Successfully");
+
+    }
+
+     /**
+     * Test Delete Not Permission method
      *
      * @return void
      */
     public function testDeleteNotPermission()
     {
+        $this->createplayer('76561198001081692');
+        $TeamPlayers = TableRegistry::get('TeamPlayers');
+
+         $data = [
+            'player_id' => '76561198121209165',
+            'name' => 'Vk'
+        ];
+
+        $this->post('/teams/insert', $data);
+        
+        $team_id =$TeamPlayers->find()->select(["team_id"])->where(['player_id' => '76561198121209165'])->toArray();
+
+         $this->delete('/teams/delete/'.$team_id[0]['team_id'].'?player_id=76561198001081692', $data);
+
+        $this->assertResponseCode(400);
+        $this->assertResponseContains("You are not allowed to delete this team");
+
+    }
+
+    /**
+     * Test Edit Successfully method
+     *
+     * @return void
+     */
+    public function testEditSuccessfully()
+    {
         $this->createplayer();
         $TeamPlayers = TableRegistry::get('TeamPlayers');
-        $team_id =$TeamPlayers->find()->select(["team_id"])->where(['player_id' => '76561198121209165'])->toArray();
-      
-        $data = [
+
+         $data = [
             'player_id' => '76561198121209165',
-            'team_id' => $team_id[0]['team_id']
+            'name' => 'Vk',
+            'description' => 'Este Team'
         ];
+
+        $this->post('/teams/insert', $data);
         
-        $this->delete('/teams/delete', $data);
+        $team_id =$TeamPlayers->find()->select(["team_id"])->where(['player_id' => '76561198121209165'])->toArray();
+
+        $this->put('/teams/edit/'.$team_id[0]['team_id'], $data);
 
         $this->assertResponseCode(200);
+        $this->assertContentType("application/json");
+        $this->assertResponseContains("Este Team");
+
+    }
+
+
+    /**
+     * Test Edit Not Permission method
+     *
+     * @return void
+     */
+    public function testEditNotPermission()
+    {
+         $this->createplayer('76561198001081692');
+        $TeamPlayers = TableRegistry::get('TeamPlayers');
+
+         $data = [
+            'player_id' => '76561198001081692',
+            'name' => 'Vk',
+            'description' => 'Este Team'
+        ];
+
+        $this->post('/teams/insert', $data);
         
+        $team_id =$TeamPlayers->find()->select(["team_id"])->where(['player_id' => '76561198121209165'])->toArray();
 
-    }
+        $this->put('/teams/edit/'.$team_id[0]['team_id'], $data);
 
-    /**
-     * Test add method
-     *
-     * @return void
-     */
-    public function testAdd()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        $this->assertResponseCode(200);
+        $this->assertContentType("application/json");
+        $this->assertResponseContains("Este Team");
 
-    /**
-     * Test edit method
-     *
-     * @return void
-     */
-    public function testEdit()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     */
-    public function testDelete()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
     }
 }
