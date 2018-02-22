@@ -163,4 +163,15 @@ class PlayersController extends ApiController
 
 	    $this->apiResponse['stats'] = $stats;
 	}
+
+	public function crawler() {
+		$this->request->allowMethod('get');
+
+		$players = $this->Steam->getPlayers($this->Validator->__getRequestKey('steam_name'), $this->Validator->__getRequestKey('page'));
+
+		if(!$this->Validator->is_steamValid($players, [ 'status_code' => 404, 'message'	  => 'No player was finded with this nickname' ]))
+			return null;
+
+		$this->apiResponse['players'] = $players;
+	}
 }
