@@ -3,7 +3,7 @@ namespace App\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 
-class PlayerFixture extends TestFixture
+class TeamsFixture extends TestFixture
 {
       // Optional. Set this property to load fixtures to a different test datasource
       public $connection = 'test';
