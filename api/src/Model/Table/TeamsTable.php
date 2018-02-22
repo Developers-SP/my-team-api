@@ -8,13 +8,15 @@ use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\ORM\TableRegistry;
+
 
 /**
  * Users Model
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class PlayerTable extends Table
+class TeamsTable extends Table
 {
 
     /**
@@ -30,6 +32,8 @@ class PlayerTable extends Table
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsToMany('players',['joinTable' => 'team_players', 'dependent' => true, 'cascadeCallbacks' => true, ]);
     }
 
     /**
@@ -44,28 +48,13 @@ class PlayerTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('steam_name', 'create', 'This is required parameter.')
-            ->notEmpty('steam_name', 'steam_name is required.');
+            ->requirePresence('name', 'create', 'This is required parameter.')
+            ->notEmpty('name', 'name is required.');
 
         return $validator;
     }
 
-    /**
-     * Default validation rules.
-     *
-     * @param Validator $validator Validator instance.
-     * @return Validator
-     */
-    public function validationLoginApi(Validator $validator)
-    {
-        $validator
-            ->requirePresence('id', 'create', 'This is required parameter.')
-            ->notEmpty('id', 'id is required');
-
-        return $validator;
-    }
-
-    /**
+   /**
      * Modifies password before saving into database
      *
      * @param Event $event Event
@@ -76,21 +65,30 @@ class PlayerTable extends Table
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
     {
         if(empty($entity->created))
-            $entity->created   = date("Y-m-d H:i:s");
+            $entity->modified   = date("Y-m-d H:i:s");
             
         $entity->modified   = date("Y-m-d H:i:s");
 
         return true;
     }
 
-    public function __get($player_id)
+    public function __get($team_id)
     {   
-        $player = $this->find()->where(['id' => $player_id])->toArray();
+        $team = $this->find()->where(['id' => $team_id])->contain(['players'])->toArray();
 
-        if(!empty($player[0])) 
-            return $player[0];
+        if(!empty($team[0])) 
+            return $team[0];
 
         return [];
+        
+    }                
+
+    public function deleteTeams($team_id)
+    {   
+        if($this->find()->delete()->where(['id' => $team_id])->execute()) 
+            return  1;
+
+        return 0;
         
     }
 

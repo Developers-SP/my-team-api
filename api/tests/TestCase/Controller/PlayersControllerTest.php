@@ -4,9 +4,9 @@ namespace App\Test\TestCase\Controller;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 
-class PlayerControllerTest extends IntegrationTestCase
+class PlayersControllerTest extends IntegrationTestCase
 {
-    public $fixtures = ['app.player'];
+    public $fixtures = ['app.players'];
 
     public function testLogin()
     {
@@ -14,7 +14,7 @@ class PlayerControllerTest extends IntegrationTestCase
             'id' => '76561198121209165'
         ];
 
-        $this->post('/player/login', $data);
+        $this->post('/players/login', $data);
 
         $this->assertResponseCode(200);
         $this->assertContentType("application/json");
@@ -27,7 +27,7 @@ class PlayerControllerTest extends IntegrationTestCase
     {
         $data = [];
 
-        $this->post('/player/login', $data);
+        $this->post('/players/login', $data);
 
         $this->assertResponseCode(400);
         $this->assertContentType("application/json");
@@ -41,7 +41,7 @@ class PlayerControllerTest extends IntegrationTestCase
             'id' => '7612120165'
         ];
 
-        $this->post('/player/login', $data);
+        $this->post('/players/login', $data);
 
         $this->assertResponseCode(404);
         $this->assertContentType("application/json");
@@ -55,7 +55,7 @@ class PlayerControllerTest extends IntegrationTestCase
             'id' => '76561198303910588'
         ];
 
-        $this->post('/player/login', $data);
+        $this->post('/players/login', $data);
 
         $this->assertResponseCode(200);
         $this->assertContentType("application/json");
@@ -72,7 +72,7 @@ class PlayerControllerTest extends IntegrationTestCase
             'email'     => 'pedrohenrique635@hotmail.com'
         ];
 
-        $this->put('/player/edit/76561198121209165', $data);
+        $this->put('/players/edit/76561198121209165', $data);
 
         $this->assertResponseCode(200);
         $this->assertContentType("application/json");
@@ -87,7 +87,7 @@ class PlayerControllerTest extends IntegrationTestCase
             'email'     => 'pedrohenrique635@hotmail.com'
         ];
 
-        $this->put('/player/edit/', $data);
+        $this->put('/players/edit/', $data);
 
         $this->assertResponseCode(400);
         $this->assertContentType("application/json");
@@ -102,7 +102,7 @@ class PlayerControllerTest extends IntegrationTestCase
             'email'     => 'pedrohenrique635@hotmail.com'
         ];
 
-        $this->put('/player/edit/7612120165', $data);
+        $this->put('/players/edit/7612120165', $data);
 
         $this->assertResponseCode(404);
         $this->assertContentType("application/json");
@@ -111,7 +111,7 @@ class PlayerControllerTest extends IntegrationTestCase
 
     public function testUpdateBySteam()
     {
-        $this->put('/player/updateBySteam/76561198121209165');
+        $this->put('/players/updateBySteam/76561198121209165');
 
         $this->assertResponseCode(200);
         $this->assertContentType("application/json");
@@ -121,7 +121,7 @@ class PlayerControllerTest extends IntegrationTestCase
 
     public function testUpdateBySteamEmpty()
     {
-        $this->put('/player/updateBySteam/');
+        $this->put('/players/updateBySteam/');
 
         $this->assertResponseCode(400);
         $this->assertContentType("application/json");
@@ -131,7 +131,7 @@ class PlayerControllerTest extends IntegrationTestCase
 
     public function testUpdateBySteamInvalid()
     {
-        $this->put('/player/updateBySteam/7612120165');
+        $this->put('/players/updateBySteam/7612120165');
 
         $this->assertResponseCode(404);
         $this->assertContentType("application/json");
@@ -141,7 +141,7 @@ class PlayerControllerTest extends IntegrationTestCase
 
     public function testStats()
     {
-        $this->get('/player/stats/76561198121209165');
+        $this->get('/players/stats/76561198121209165');
 
         $this->assertResponseCode(200);
         $this->assertContentType("application/json");
@@ -152,7 +152,7 @@ class PlayerControllerTest extends IntegrationTestCase
 
     public function testStatsEmpty()
     {
-        $this->get('/player/stats/');
+        $this->get('/players/stats/');
 
         $this->assertResponseCode(400);
         $this->assertContentType("application/json");
@@ -162,7 +162,7 @@ class PlayerControllerTest extends IntegrationTestCase
 
     public function testStatsInvalid()
     {
-        $this->get('/player/stats/7612120165');
+        $this->get('/players/stats/7612120165');
 
         $this->assertResponseCode(404);
         $this->assertContentType("application/json");
