@@ -26,7 +26,9 @@ class ValidatorComponent extends Component
         
         if(!empty($this->api_resource->request->getData()[$key]))
             return $this->api_resource->request->getData()[$key];
-        
+
+        if(!empty($this->api_resource->request->query[$key]))
+            return $this->api_resource->request->query[$key];
 
         return null;
     }

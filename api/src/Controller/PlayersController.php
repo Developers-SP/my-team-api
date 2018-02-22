@@ -1,15 +1,13 @@
 <?php
- 
+
 namespace App\Controller;
- 
+
 use RestApi\Controller\ApiController;
 use RestApi\Utility\JwtToken;
- 
-/*                
-			      */
+
 class PlayersController extends ApiController
 {
- 	
+
  	public function initialize()
     {
         parent::initialize();
@@ -32,7 +30,7 @@ class PlayersController extends ApiController
     	$order = $this->API->order_by();
     	if(!empty($order))
     		$query = $query->order($order);
-    	
+
     	$this->httpStatusCode = 200;
     	$this->apiResponse['players'] = $query->toArray();
     }
@@ -40,13 +38,13 @@ class PlayersController extends ApiController
     public function login()
 	{
 	    $this->request->allowMethod('post');
-	    
+
 	    $player_id = $this->Validator->__getRequestKey('id');
 	    // Validating if player_id is being sended
 	    if($this->Validator->is_emptyID($player_id))
 	    	return null;
-	    
-	    
+
+
 	    // Getting player data if exists
 	    $player = $this->Players->__get($player_id);
 
@@ -80,9 +78,9 @@ class PlayersController extends ApiController
 			$this->apiResponse['player'] = $player;
 			$this->apiResponse['new'] 	 = 1;
 		}
-				
+
     	return null;
-	    
+
 	}
 
 	/**
@@ -97,10 +95,10 @@ class PlayersController extends ApiController
 		// Validating if player_id is being sended
 	    if($this->Validator->is_emptyID($player_id))
 	    	return null;
-		
+
 	    // Getting player on database
 	    try {
-	    	$player = $this->Players->get($player_id);	
+	    	$player = $this->Players->get($player_id);
 	    } catch (\Exception $e) {
 	    	$this->httpStatusCode = 404;
 			$this->apiResponse['message'] = "Player not found";
@@ -162,5 +160,16 @@ class PlayersController extends ApiController
 			return null;
 
 	    $this->apiResponse['stats'] = $stats;
+	}
+
+	public function crawler() {
+		$this->request->allowMethod('get');
+
+		$players = $this->Steam->getPlayers($this->Validator->__getRequestKey('steam_name'), $this->Validator->__getRequestKey('page'));
+
+		if(!$this->Validator->is_steamValid($players, [ 'status_code' => 404, 'message'	  => 'No player was finded with this nickname' ]))
+			return null;
+
+		$this->apiResponse['players'] = $players;
 	}
 }
