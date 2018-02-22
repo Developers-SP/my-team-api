@@ -21,9 +21,8 @@ class CreateTeamPlayers extends AbstractMigration
             'limit' => 11,
             'null' => false,
         ]);
-        $table->addColumn('player_id', 'string', [
+        $table->addColumn('player_id', 'integer', [
             'default' => null,
-            'limit' => 255,
             'null' => false,
         ]);
         $table->addColumn('created', 'datetime', [

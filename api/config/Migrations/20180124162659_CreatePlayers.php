@@ -14,12 +14,12 @@ class CreatePlayers extends AbstractMigration
     {
         $table = $this->table('players', ['id' => false, 'primary_key' => ['id']]);
         
-        $table->addColumn('id', 'string', [
+        $table->addColumn('id', 'integer', [
             'default' => null,
-            'limit' => 50,
             'null' => false,
+            'autoIncrement' => true
         ]);
-        $table->addColumn('steam_name', 'string', [
+        $table->addColumn('nickname', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => false,
@@ -39,15 +39,29 @@ class CreatePlayers extends AbstractMigration
             'limit' => 255,
             'null' => true,
         ]);
-        $table->addColumn('active', 'integer', [
-            'null' => false,
-            'limit' => 1,
-            'default' => 1
+        $table->addColumn('city', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
+        ]);
+        $table->addColumn('country', 'string', [
+            'default' => null,
+            'limit' => 255,
+            'null' => true,
         ]);
         $table->addColumn('avatar', 'string', [
             'default' => null,
             'limit' => 500,
             'null' => true,
+        ]);
+        $table->addColumn('email_verified', 'integer', [
+            'null' => false,
+            'limit' => 1,
+            'default' => 0
+        ]);$table->addColumn('active', 'integer', [
+            'null' => false,
+            'limit' => 1,
+            'default' => 1
         ]);
         $table->addColumn('created', 'datetime', [
             'default' => null,
